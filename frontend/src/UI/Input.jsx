@@ -3,9 +3,11 @@ export default function Input(props) {
     props?.additionalClass ? props.additionalClass : ""
   }`;
 
+  const labelStyles = `font-medium ${props.labelClass ? props.labelClass : ""}`;
+
   return (
     <div className="flex flex-1 flex-col gap-1 mt-3">
-      <label htmlFor={props.input?.id} className="font-medium">
+      <label htmlFor={props.input?.id} className={labelStyles}>
         {props?.label}
       </label>
       <input {...props?.input} className={classes} onChange={props?.onChangeHandler} />

@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 import Input from "../UI/Input";
 import Card from "../UI/Card";
+import { useSetRecoilState } from "recoil";
+import { userTokenAtom } from "../store/atoms/UserSessionData";
 
 export default function Signin() {
   const navigate = useNavigate();
@@ -11,6 +13,7 @@ export default function Signin() {
     username: "",
     password: "",
   });
+  const setToken = useSetRecoilState(userTokenAtom);
 
   const onChangeInputValue = (e) => {
     switch (e.target.id) {
@@ -53,6 +56,8 @@ export default function Signin() {
       username: "",
       password: "",
     });
+
+    setToken(response.token);
     navigate("/dashboard");
   };
 

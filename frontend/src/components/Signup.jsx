@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Card from "../UI/Card";
 import Input from "../UI/Input";
 import { useState } from "react";
+import { useSetRecoilState } from "recoil";
+import { userTokenAtom } from "../store/atoms/UserSessionData";
 
 export default function Signup() {
   const [signupData, setSignupData] = useState({
@@ -12,6 +14,7 @@ export default function Signup() {
     lastName: "",
   });
   const [error, setError] = useState(null);
+  const setToken = useSetRecoilState(userTokenAtom);
   const navigate = useNavigate();
 
   const onChangeInputValue = (e) => {
@@ -47,9 +50,14 @@ export default function Signup() {
   };
 
   const onSignupUser = async () => {
+    const userData = {
+      ...signupData,
+      firstName: signupData.firstName.toLowerCase(),
+      lastName: signupData.lastName.toLowerCase(),
+    };
     const sendData = await fetch("http://localhost:3000/api/vi/user/signup", {
       method: "POST",
-      body: JSON.stringify(signupData),
+      body: JSON.stringify(userData),
       headers: {
         "Content-type": "application/json",
       },
@@ -71,6 +79,8 @@ export default function Signup() {
       firstName: "",
       lastName: "",
     });
+
+    setToken(response.token);
     navigate("/dashboard");
   };
 
