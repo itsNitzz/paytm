@@ -19,8 +19,6 @@ export const userBalance = atom({
 
       const response = await getData.json();
 
-      console.log(response);
-
       if (!getData.ok) {
         return { error: "An error occured while fetching balance, please try again after." };
       }
