@@ -1,16 +1,33 @@
 import { useRecoilValue } from "recoil";
 import Input from "../UI/Input";
 import Users from "./Users";
-import { userBalance } from "../store/atoms/UserSessionData";
-import { getAllUsers } from "../store/selectors/UserDataSelector";
+import { userBalance, userTokenAtom } from "../store/atoms/UserSessionData";
+import { useEffect, useState } from "react";
 
 export default function Dashboard() {
   const getBalance = useRecoilValue(userBalance);
-  const allUsers = useRecoilValue(getAllUsers(""));
+  const getToken = useRecoilValue(userTokenAtom);
+  const [filter, setFilter] = useState("");
+  const [filteresUsers, setFilteredUsers] = useState([]);
 
-  const users = allUsers.map((user) => {
-    return <Users key={user._id} user={user} />;
-  });
+  useEffect(() => {
+    const timeOut = setTimeout(async () => {
+      const fetchData = await fetch(`http://localhost:3000/api/vi/user/bulk?filter=${filter}`, {
+        headers: {
+          Authorization: `Bearer ${getToken}`,
+        },
+      });
+      const data = await fetchData.json();
+
+      console.log(data);
+
+      setFilteredUsers(data.users);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeOut);
+    };
+  }, [filter, getToken]);
 
   return (
     <section>
@@ -27,13 +44,16 @@ export default function Dashboard() {
       </div>
       <div className="p-4">
         <Input
+          onChangeHandler={(e) => setFilter(e.target.value)}
           label="Users"
           labelClass="text-xl !font-bold mb-2"
           additionalClass="placeholder:text-slate-500"
           input={{ type: "text", placeholder: "Search users...", id: "search" }}
         />
       </div>
-      {users}
+      {filteresUsers.map((user) => {
+        return <Users key={user._id} user={user} />;
+      })}
     </section>
   );
 }
