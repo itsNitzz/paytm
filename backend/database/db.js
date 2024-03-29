@@ -4,7 +4,7 @@ const { number } = require("zod");
 const { Schema } = mongoose;
 
 mongoose.connect(
-  "mongodb+srv://itsnitzz00:Mymongo%23789@cluster0.45fsrfa.mongodb.net/paytmUsers"
+  "mongodb+srv://itsnitzz00:***@cluster0.45fsrfa.mongodb.net/paytmUsers"
 );
 
 const usersSchema = new Schema({
